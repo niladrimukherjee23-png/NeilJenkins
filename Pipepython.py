@@ -1,0 +1,6 @@
+var1 = input("What is your name?")
+var3 = ["B","C","D"]
+if any(char in var3 for char in var1):
+    print(var1)
+else:
+    print("Wrong Name")

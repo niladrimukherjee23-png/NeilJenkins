@@ -1,21 +1,28 @@
-import pytest
-from unittest.mock import patch
-import builtins
+import unittest
+import subprocess
 
-# Function to test: this is a simplified version of your original code wrapped in a function
-def check_name(name):
-    var3 = ["B", "C", "D"]
-    if any(char in var3 for char in name):
-        return name
-    else:
-        return "Wrong Name"
+class TestPipePython(unittest.TestCase):
 
-# Test cases
-def test_name_with_valid_input():
-    assert check_name("Alice") == "Wrong Name"  # No characters from var3
-    assert check_name("Bob") == "Bob"            # 'B' is in var3
-    assert check_name("Charlie") == "Charlie"    # 'C' is in var3
-    assert check_name("David") == "Wrong Name"   # No characters from var3
+    def run_script(self, name):
+        result = subprocess.run(
+            ['python3', './Pipepython.py', name],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True
+        )
+        return result.stdout.strip(), result.stderr.strip()
 
-def test_name_with_invalid_input():
-    assert check_name("Eve") == "Wrong Name"     # No characters from var3
+    def test_correct_name(self):
+        output, _ = self.run_script("B")
+        self.assertEqual(output, "B")
+
+    def test_incorrect_name(self):
+        output, _ = self.run_script("Alice")
+        self.assertEqual(output, "Wrong Name")
+
+    def test_default_user(self):
+        output, _ = self.run_script("")
+        self.assertEqual(output, "Wrong Name")
+
+if __name__ == '__main__':
+    unittest.main()
